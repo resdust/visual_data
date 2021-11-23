@@ -1,7 +1,8 @@
 import axios from 'axios'
 import store from '../../store'
 
-const dataApi = "/getAreaData"
+const dataApi =  process.env.NODE_ENV === 'dev' ? 
+  '/getAreaData' : 'http://47.99.79.38:10074/getAreaData'
 
 function initData(newData){
   store.commit('CHANGE_TOTAL',newData["count"])
@@ -56,11 +57,12 @@ function getData(){
   axios.get(dataApi).then(
     res => {
       if (res.data.code==200) {
+        // console.log('res',res);
         var newData = res.data.data
-        // console.log('res.data.data',newData);
         initData(newData)
       } else {
-        console.log('请求出错,错误代码 ',res.msg)
+        console.log('请求出错',res)
+        console.log('错误代码',res.status)
       }
     },
 

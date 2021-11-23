@@ -4,10 +4,10 @@ const themeColor = [
   '#ecf0f1',
   '#e67e22',
   '#3498db',
-  '#27ae60',
+  '#f39c12',
   '#1abc9c',
   '#9b59b6',
-  '#e74c3c',
+  '#3498db',
 ];
 const labelStyle = {
   textStyle: {
