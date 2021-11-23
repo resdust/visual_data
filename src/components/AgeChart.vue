@@ -4,7 +4,7 @@
 
 <script>
   import * as echarts from 'echarts';
-  import styles from '../styles'
+  import styles from '../utils/styles'
   
   export default{
     name:"AgeChart",
@@ -101,66 +101,47 @@
             },
           ],
         },
-        newOption:{}
+        myChart: {}
+      }
+    },
+    computed:{
+      newOption(){
+        return [
+          {
+            name: '男',
+            data: this.$store.state.ageCount['mGender'],
+          },
+          {
+            name: '女',
+            data: this.$store.state.ageCount['wGender'],
+          },
+        ]
       }
     },
     mounted(){
-      const myChart = echarts.init(this.$refs.oldAgeGenderInfo)
-      myChart.setOption(this.option)
+      this.myChart = echarts.init(this.$refs.oldAgeGenderInfo)
+      this.myChart.setOption(this.option)
 
-      // myChart.showLoading()
+      this.myChart.showLoading()
 
-      // this.getData().then(()=>{
-      //   myChart.setOption(this.newOption)
-      //   myChart.hideLoading()
-      //   }
-      // )
-      // console.log('new',this.newOption);
-      myChart.resize()
-
+      this.myChart.resize()
       window.addEventListener('resize', function () {
-        myChart.resize()
+        this.myChart.resize()
       })
     },
+    watch: {
+      newOption:{
+        handler(){
+          this.reRender()
+        },
+        deep:true
+      }
+    },
     methods:{
-      // getData(){
-      //   // 后台获取动态数据，各年龄段老人数
-      //   return axios.get('/elderData/ageData').then(
-      //     res => {
-      //       console.log(res);
-      //       if (res.code==200) {
-      //         const secretKey = 'chuzu@1992'
-      //         let resData = ajaxDec(res.data, secretKey)
-      //         let viewData = {
-      //           male: resData.manNums,
-      //           female: resData.womanNums,
-      //           axisData: resData.ageTypes,
-      //         }
-              
-      //         this.newOption = {
-      //           xAxis: {
-      //             data: viewData.axisData,
-      //           },
-      //           series: [
-      //             {
-      //               name: '男',
-      //               data: viewData.male,
-      //             },
-      //             {
-      //               name: '女',
-      //               data: viewData.female,
-      //             },
-      //           ],
-      //         }
-      //       } else {
-      //         console.log(res.msg)
-      //       }
-      //     },
-
-      //     error => {
-      //       console.log(error)
-      //     })
-      // }
+      reRender(){
+        this.myChart.hideLoading()
+        this.myChart.setOption({series:this.newOption})
+      }
     }
   }
 

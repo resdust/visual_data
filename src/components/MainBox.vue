@@ -1,7 +1,7 @@
 <template>
   <!-- body box -->
   <section class = "mainbox">
-      <!-- 琅琊区总体数据页 -->
+      <!-- 第一栏列 -->
       <div id="total1" class="column">
           <DataNumber class='element' id="datanumber"/>
           <div class="element panel" id="infochart">
@@ -9,7 +9,7 @@
             <div class="panel-footer"></div>
           </div>
       </div>
-      <!-- 服务模块页 -->
+      <!-- 第二列 -->
       <div id="total2" class="column">
           <div class="element panel">
               <ResidentChart msg="户籍地所在地分布"/>

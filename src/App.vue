@@ -8,7 +8,6 @@
 <script>
 import MainBox from './components/MainBox.vue'
 import TitleHeader from './components/TitleHeader.vue'
-import initData from './utils/api'
 
 export default {
   name: 'App',
@@ -16,8 +15,8 @@ export default {
     MainBox,
     TitleHeader
   },
-  created(){
-    initData()
+  mounted(){
+    this.$store.dispatch('initData')
   }
 }
 </script>

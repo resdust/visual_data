@@ -4,13 +4,10 @@
 
 <script>
   import * as echarts from 'echarts';
-  import styles from '../styles'
-  import store from '../store'
-
-  var thisData = store.state.marriageCount;
+  import styles from '../utils/styles'
 
   export default {
-    name:"CultureChart",
+    name:"MarriageChart",
     props:['msg'],
     data(){
       return{
@@ -29,9 +26,9 @@
           },
           legend: {
             show: true,
-            formatter: function(name){
+            formatter: (name)=>{
               //通过name获取到数组对象中的单个对象
-              let singleData = thisData.filter(function(item){
+              let singleData = this.newOption.filter(function(item){
                 return item.name == name
               })
               return  name + ' | ' + singleData[0].value + '人';
@@ -87,18 +84,40 @@
               ],
             },
           ],
-        }
+        },
+        myChart:{}
+      }
+    },
+    computed:{
+      newOption(){
+        return this.$store.state.marriageCount
+      }
+    },
+    watch:{
+      newOption:{
+        handler(){
+          this.reRender()
+        },
+        deep: true
+      }
+    },
+    methods:{
+      reRender(){
+        this.myChart.hideLoading()
+        this.myChart.setOption({series:
+          [{data:this.newOption}]
+          })
       }
     },
     mounted(){
-      const myChart = echarts.init(this.$refs.marriageInfo)
-      myChart.setOption(this.option)
+      this.myChart = echarts.init(this.$refs.marriageInfo)
+      this.myChart.setOption(this.option)
 
-      // myChart.showLoading()
-      myChart.resize()
+      this.myChart.showLoading()
 
+      this.myChart.resize()
       window.addEventListener('resize', function () {
-        myChart.resize()
+        this.myChart.resize()
       })
     }
 }

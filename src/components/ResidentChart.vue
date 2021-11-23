@@ -4,18 +4,13 @@
 
 <script>
   import * as echarts from 'echarts';
-  import styles from '../styles'
-  import store from '../store'
-
-  var thisData = store.state.resiCount;
-  console.log('resiCount',thisData);
+  import styles from '../utils/styles'
 
   export default {
     name:"ResidentChart",
     props:['msg'],
     data(){
       return{
-        resiData:this.$store.state.resiCount,
         option: {
           title: {
             text: this.msg,
@@ -31,11 +26,9 @@
           },
           legend: {
             show: true,
-            formatter: function(name){
-              console.log('resi',name);
-              console.log('func',thisData);
+            formatter: (name)=>{
               //通过name获取到数组对象中的单个对象
-              let singleData = thisData.filter(function(item){
+              let singleData = this.newOption.filter(function(item){
                 return item.name == name
               })
               return  name + ' | ' + singleData[0].value + '人';
@@ -93,21 +86,40 @@
               ],
             },
           ],
-        }
+        },
+        myChart : {}
+      }
+    },
+    computed:{
+      newOption(){
+        return this.$store.state.resiCount
+      }
+    },
+    watch:{
+      newOption:{
+        handler(){
+          this.reRender()
+        },
+        deep: true
+      }
+    },
+    methods:{
+      reRender(){
+        this.myChart.hideLoading()
+        this.myChart.setOption({series:
+          [{data:this.newOption}]
+          })
       }
     },
     mounted(){
-      // 刷新数据
-      thisData = store.state.distCount;
-      console.log('mounted',thisData);
+      this.myChart = echarts.init(this.$refs.cultureInfo)
+      this.myChart.setOption(this.option)
 
-      const myChart = echarts.init(this.$refs.cultureInfo)
-      myChart.setOption(this.option)
+      this.myChart.showLoading()
 
-      // myChart.showLoading()
-
+      this.myChart.resize()
       window.addEventListener('resize', function () {
-        myChart.resize()
+        this.myChart.resize()
       })
     }
 }

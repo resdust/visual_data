@@ -1,33 +1,35 @@
 // 创建Vuex种的store
 import Vue from 'vue'
 import Vuex from 'vuex'
+import getData from '../utils/api'
 
 Vue.use(Vuex)
 
-
 // 准备actions，用于相应组件中的动作
 const actions = {
-  
+  initData(){
+    getData()
+  }
 }
 // 准备mutations，用于操作数据（state）
 const mutations = {
-  changeTotal (state, data) {
+  CHANGE_TOTAL (state, data) {
     state.totalNum = data
   },
-  changeMale (state, data) {
+  CHANGE_MALE (state, data) {
     state.maleNum = data
   },
-  changeFemal (state, data) {
+  CHANGE_FEMALE (state, data) {
     state.femaleNum = data
   },
-  changeResi (state, data) {
+  CHANGE_RESI (state, data) {
     state.resiCount = data
   },
-  changeMarriage (state, data) {
+  CHANGE_MARRIAGE (state, data) {
     state.marriageCount = data
   },
-  changeAge (state, data) {
-    state.total = data
+  CHANGE_AGE (state, data) {
+    state.ageCount = data
   },
 }
 // 准备state，用于存储数据

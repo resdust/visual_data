@@ -3,53 +3,62 @@ import store from '../../store'
 
 const dataApi = "/getAreaData"
 
-function initData(){
+function initData(newData){
+  store.commit('CHANGE_TOTAL',newData["count"])
+    store.commit('CHANGE_MALE',newData["man"])
+    store.commit('CHANGE_FEMALE',newData["woman"])
+    
+    // 年龄与性别
+    let ageDist = {
+      'mGender':newData["mGender"],
+      'wGender':newData["wGender"],
+    }
+    store.commit('CHANGE_AGE',ageDist)
+
+    // 婚姻状况
+    let marriageObj = {}
+    let mMarr = eval(newData["mMarry"])
+    let fMarr = eval(newData["wMarry"])
+    mMarr.forEach(item => {
+      if (item.marry in marriageObj) {
+        marriageObj[item.marry] += item.count
+      } else {
+        marriageObj[item.marry] = item.count
+      }
+    });
+    fMarr.forEach(item => {
+      if (item.marry in marriageObj) {
+        marriageObj[item.marry] += item.count
+      } else {
+        marriageObj[item.marry] = item.count
+      }
+    });
+
+    let marriageDist = []
+    for (let key in marriageObj){
+      let item={name:key,value:marriageObj[key]}
+      marriageDist.unshift(item)
+    }
+
+    store.commit('CHANGE_MARRIAGE',marriageDist)
+    
+    // 户籍地
+    let resiDist = []
+    for (let key in newData["area"]) {
+      resiDist.push({
+        name:key,
+        value:newData["area"][key]
+      })
+    }
+    store.commit('CHANGE_RESI',resiDist)
+}
+function getData(){
   axios.get(dataApi).then(
     res => {
       if (res.data.code==200) {
-        let resData = res.data.data
-
-        store.commit('changeTotal',resData["count"])
-        store.commit('changeMale',resData["man"])
-        store.commit('changeFemal',resData["woman"])
-        
-        // 年龄与性别
-        let ageDist = {
-          'mGender':resData["mGender"],
-          'wGender':resData["wGender"],
-        }
-        store.commit('changeAge',ageDist)
-
-        // 婚姻状况
-        let marriageDist = {}
-        let mMarr = eval(resData["mMarry"])
-        let fMarr = eval(resData["wMarry"])
-        mMarr.forEach(item => {
-          if (item in marriageDist) {
-            marriageDist[item] += mMarr[item]
-          } else {
-            marriageDist[item] = mMarr[item]
-          }
-        });
-        fMarr.forEach(item => {
-          if (item in marriageDist) {
-            marriageDist[item] += fMarr[item]
-          } else {
-            marriageDist[item] = fMarr[item]
-          }
-        });
-        store.commit('changeMarriage',marriageDist)
-        
-        // 户籍地
-        let resiDist = []
-        for (let key in resData["area"]) {
-          resiDist.push({
-            name:key,
-            value:resData["area"][key]
-          })
-        }
-        store.commit('changeResi',resiDist)
-
+        var newData = res.data.data
+        // console.log('res.data.data',newData);
+        initData(newData)
       } else {
         console.log('请求出错,错误代码 ',res.msg)
       }
@@ -57,7 +66,8 @@ function initData(){
 
     error => {
       console.log('请求出错',error)
-    })
+    }
+  )
 }
 
-export default initData
+export default getData

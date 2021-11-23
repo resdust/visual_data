@@ -5,9 +5,9 @@ const themeColor = [
   '#e67e22',
   '#3498db',
   '#27ae60',
+  '#1abc9c',
   '#9b59b6',
   '#e74c3c',
-  '#1abc9c'
 ];
 const labelStyle = {
   textStyle: {
