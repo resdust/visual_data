@@ -53,6 +53,7 @@ function initData(newData) {
   }
   store.commit('CHANGE_RESI', resiDist)
 }
+
 function getData() {
   axios.get(dataApi).then(
     (res) => {
@@ -61,8 +62,8 @@ function getData() {
         var newData = res.data.data
         initData(newData)
       } else {
-        console.log('请求出错', res)
-        console.log('错误代码', res.status)
+        console.error('请求出错', res)
+        console.error('错误代码', res.status)
       }
     },
 

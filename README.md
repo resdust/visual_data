@@ -1,5 +1,6 @@
 # visual-data DEMO
 大屏动态数据可视化展示代码备份
+
 ## 场景
 某市已登记的老年人口数据分析与展示
 - 数字：总人数、男性、女性
@@ -9,14 +10,25 @@
 
 ## 技术栈
 - Echarts
-- VueJS
+- VueJS 2
 - axios
+
+## 控制流程
+1. 通过main.js挂载app.vue，在挂起后向**vuex**发起initData的action
+  ```javascript
+  mounted() {
+    this.$store.dispatch('initData')
+  }
+  ```
+1. vuex调用utils/api中的getData，通过**axios**的get请求创建Promise，成功则解析数据包，初始化Vuex的state
+2. 初始化方法通过vuex的mutations改变store中的值
+3. app.vue中mount MainBox 和 TitleHeader，mainbox先通过flex控制布局，再在每个组件中挂载echarts图表
+4. 每个组件绑定从vuex的state获取的数据options来初始化echarts，在初始化成功前显示echarts的loading页面，之后调用`this.myChart.resize()`, 同时对window绑定事件监听器resize，监听到时重新渲染。
 
 ## 部署地址
 http://xxxx/lyq-visual/
 
 ## API
-
 http://xxxx/getAreaData
 
 > {
